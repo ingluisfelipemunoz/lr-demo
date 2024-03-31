@@ -1,4 +1,4 @@
-import TextUtil from "../utilities/text.util";
+import TextUtil from "../../utilities/text.util";
 const classes =
   "input bg-stone-300 rounded-md p-2 text-base text-stone-900 font-medium mr-2";
 const classes2 = classes + " w-5/6";
