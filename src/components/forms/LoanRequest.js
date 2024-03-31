@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import Input from "../Input";
-import Legend from "../Legend";
-import Fieldset from "../Fieldset";
+import React, { useRef, useState } from "react";
+import Input from "../tags/Input";
+import Fieldset from "../tags/Fieldset";
 // Importar supabase client para interactuar con Supabase
 
 export default function LoanRequest() {
+  const frm = useRef();
+  const [vivienda, setVivienda] = useState("vivienda_propia");
+  const values = () => {
+    return new FormData(frm.current);
+  };
   const [formData, setFormData] = useState({
     oficina: "",
     fecha: "",
@@ -51,11 +55,13 @@ export default function LoanRequest() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("frm", values().get("vivienda"));
     // Aquí manejarías el envío del formulario a Supabase
   };
 
   return (
     <form
+      ref={frm}
       onSubmit={handleSubmit}
       className="space-y-4 mx-4 my-4 bg-stone-100 p-4"
     >
@@ -72,14 +78,37 @@ export default function LoanRequest() {
           <Input name="gradoEducacion" label="Grado de Educacion" />
           <Input type="date" name="fechaNacimiento" />
         </div>
-        <div className="flex flex-row"></div>
-        <div className="flex flex-row"></div>
-        <div className="flex flex-row"></div>
-        <div className="flex flex-row"></div>
-        <div className="flex flex-row"></div>
 
         <Input name="cantidadDependientes" />
-        <Input name="viviend" />
+
+        <Fieldset text="vivienda">
+          <div className="flex justify-evenly">
+            <Input
+              value="vivienda_propia"
+              onChange={(e) => setVivienda(e.target.value)}
+              name="vivienda"
+              label="Propia"
+              type="radio"
+            />
+            <Input
+              value="vivienda_alquilada"
+              name="vivienda"
+              onChange={(e) => setVivienda(e.target.value)}
+              label="Alquilada"
+              type="radio"
+            />
+          </div>
+          {frm.current && values().get("vivienda") === "vivienda_alquilada" ? (
+            <Input name="precioAlquiler" type="number" />
+          ) : null}
+
+          <Input
+            name="gastosMantenimientoCasa"
+            label="Gastos Mensuales de Mantenimiento"
+            type="number"
+          />
+        </Fieldset>
+
         <Fieldset text="Direccion">
           <Input textarea name="direccion1" label="direccion 1" />
           <Input textarea name="direccion2" label="direccion 2" />
